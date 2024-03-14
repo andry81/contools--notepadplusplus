@@ -1,5 +1,5 @@
 * README_EN.txt
-* 2024.01.23
+* 2024.03.14
 * contools--notepadplusplus
 
 1. DESCRIPTION
@@ -29,10 +29,10 @@ Primary:
     https://github.com/andry81/contools--notepadplusplus.git
 First mirror:
   * https://sf.net/p/contools/contools--notepadplusplus/ci/master/tree
-  * https://git.code.sf.net/p/contools/contools--notepadplusplus
+    https://git.code.sf.net/p/contools/contools--notepadplusplus
 Second mirror:
   * https://gitlab.com/andry81/contools-notepadplusplus/-/branches
-  * https://gitlab.com/andry81/contools-notepadplusplus.git
+    https://gitlab.com/andry81/contools-notepadplusplus.git
 
 -------------------------------------------------------------------------------
 4. INSTALLATION
@@ -84,7 +84,7 @@ All other scripts can be directly used from the Notepad++ Plugins menu.
 Examples of the Notepad++ extra command line:
 
 >
-notepad++.exe -nosession -multiInst -z -from_utf16 -z --open_from_file_list -z "<utf-16le-with-bom-paths-list-file>"
+notepad++.exe -nosession -multiInst -z -from_utf16 -z --open_from_file_list -z "<utf-16-with-bom-paths-list-file>"
 
 >
 notepad++.exe -nosession -multiInst -z -from_utf16le -z --open_from_file_list -z "<utf-16le-without-bom-paths-list-file>"
@@ -120,7 +120,7 @@ Additional command line arguments:
 `-z -restore_if_open_inplace`
 
   Has meaning in the append mode.
-  If there were no shared instance without `-multiInst` on the command line,
+  If there were no shared instances without `-multiInst` on the command line,
   then the Notepad++ does restore the window show state (unminimizes) before
   open inplace.
   Useful in case when the user want to hide the window blinking.

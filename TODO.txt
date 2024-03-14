@@ -1,0 +1,10 @@
+* scripts/python/tacklebar/libs/npplib.py:
+
+  Improve `-append` functionality and allow to append to any instance including
+  the multi instance has used the `-nosession -multiInst` command line by add
+  `-append -allow-multi-instance` flags.
+  This would use the last created instance instead of a not multi (shared)
+  instance.
+
+  Reimplement `-append` without `-allow-multi-instance` flag to appen to a last
+  not multi instance instead of to a first found.

@@ -1,3 +1,7 @@
+2024.03.14:
+* new: TODO.txt: todo file
+* changed: README_EN.txt: readme update
+
 2024.01.23:
 * changed: scripts/python: moved from `contools` project
 * changed: README_EN.txt: readme update
