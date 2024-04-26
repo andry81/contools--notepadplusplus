@@ -1,3 +1,6 @@
+2024.04.26:
+* changed: license.txt: copyright year as project born year
+
 2024.03.14:
 * new: TODO.txt: todo file
 * changed: README_EN.txt: readme update
