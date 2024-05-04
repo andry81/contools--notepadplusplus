@@ -1,5 +1,5 @@
 * README_EN.txt
-* 2024.03.14
+* 2024.05.04
 * contools--notepadplusplus
 
 1. DESCRIPTION
@@ -52,27 +52,31 @@ Now each time when the Notepad++ starts it will call to `startup.py` script.
 -------------------------------------------------------------------------------
 5. SCRIPTS
 -------------------------------------------------------------------------------
-* `/scripts/python/tacklebar/libs/npplib.py` -
+* `/scripts/python/tacklebar/libs/npplib.py`
 
-  main library script.
+  Main library script.
 
-* `/scripts/python/tacklebar/reopen_all_files.py` -
+* `/scripts/python/tacklebar/reopen_all_files*.py`
 
-  script to workaround the Notepad++ bug:
+  Scripts to workaround the Notepad++ bug:
     `[Feature Request] Language auto detection from simplified session file`:
     https://github.com/notepad-plus-plus/notepad-plus-plus/issues/5844
 
-* `/scripts/python/tacklebar/toggle_readonly_flag_for_all_tabs.py` -
+* `/scripts/python/tacklebar/reactivate_all_files_*.py`
 
-  script to toggle the Read-Only flag for all TABS (not files)
+  Scripts to reactivate all opened files in forward or reversed order.
 
-* `/scripts/python/tacklebar/clear_readonly_flag_from_all_files.py` -
+* `/scripts/python/tacklebar/toggle_readonly_flag_for_all_tabs.py`
 
-  script to clear the Read-Only flag from all TAB FILES
+  Script to toggle the Read-Only flag for all TABS (not files).
+
+* `/scripts/python/tacklebar/clear_readonly_flag_from_all_files.py`
+
+  Script to clear the Read-Only flag from all TAB FILES.
 
 * `/scripts/python/startup.py` -
 
-  script to call upon the Notepad++ instance launch.
+  Sript to call upon the Notepad++ instance launch.
 
 -------------------------------------------------------------------------------
 6. USAGE

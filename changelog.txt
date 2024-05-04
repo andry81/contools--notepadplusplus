@@ -1,3 +1,8 @@
+2024.05.04:
+* new: scripts/python/tacklebar/reopen_all_files_activate_forward.py: reopen all files with file tabs forward activation
+* new: scripts/python/tacklebar/reactivate_all_files_*.py: reactivate opened file tabs scripts
+* changed: README_EN.txt: readme update
+
 2024.04.26:
 * changed: license.txt: copyright year as project born year
 

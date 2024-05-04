@@ -44,8 +44,34 @@ def clear_readonly_flag_from_all_files():
   print('* Number of cleared paths: ' + str(num_cleared))
   print()
 
-def reopen_all_files():
+def reactivate_all_files(reactivate_reversed = True):
+  print('reactivate_all_files:')
+  print('  - reactivate_reversed: ' + str(reactivate_reversed))
+
+  all_files = list(notepad.getFiles())
+  active_file = notepad.getCurrentFilename()
+
+  num_reopened = 0
+
+  if reactivate_reversed:
+    for f in reversed(all_files):
+      notepad.activateFile(f[0])
+      num_reopened += 1
+  else:
+    for f in all_files:
+      notepad.activateFile(f[0])
+      num_reopened += 1
+
+  notepad.activateFile(active_file)
+
+  print()
+  print('* Number of activated paths: ' + str(num_reopened))
+  print()
+
+# NOTE: `reactivate_reversed = False` - DOES NOT change activation order
+def reopen_all_files(reactivate_reversed = True):
   print('reopen_all_files:')
+  print('  - reactivate_reversed: ' + str(reactivate_reversed))
 
   all_files = list(notepad.getFiles())
   active_file = notepad.getCurrentFilename()
@@ -60,9 +86,9 @@ def reopen_all_files():
     notepad.open(f[0])
     num_reopened += 1
 
-  # reactive in reverse order
-  for f in reversed(all_files):
-    notepad.activateFile(f[0])
+  if reactivate_reversed:
+    for f in reversed(all_files):
+      notepad.activateFile(f[0])
 
   notepad.activateFile(active_file)
 
