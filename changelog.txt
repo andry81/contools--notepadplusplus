@@ -1,3 +1,6 @@
+2024.05.21:
+* changed: scripts/python/tacklebar/reactivate_all_files_*.py: by default avoid current tab activation at last
+
 2024.05.04:
 * new: scripts/python/tacklebar/reopen_all_files_activate_forward.py: reopen all files with file tabs forward activation
 * new: scripts/python/tacklebar/reactivate_all_files_*.py: reactivate opened file tabs scripts

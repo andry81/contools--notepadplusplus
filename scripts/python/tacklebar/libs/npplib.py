@@ -44,7 +44,7 @@ def clear_readonly_flag_from_all_files():
   print('* Number of cleared paths: ' + str(num_cleared))
   print()
 
-def reactivate_all_files(reactivate_reversed = True):
+def reactivate_all_files(reactivate_reversed = True, reactive_current_at_last = False):
   print('reactivate_all_files:')
   print('  - reactivate_reversed: ' + str(reactivate_reversed))
 
@@ -62,7 +62,8 @@ def reactivate_all_files(reactivate_reversed = True):
       notepad.activateFile(f[0])
       num_reopened += 1
 
-  notepad.activateFile(active_file)
+  if reactive_current_at_last:
+    notepad.activateFile(active_file)
 
   print()
   print('* Number of activated paths: ' + str(num_reopened))
