@@ -97,6 +97,58 @@ def reopen_all_files(reactivate_reversed = True):
   print('* Number of reopened paths: ' + str(num_reopened))
   print()
 
+def undo_all_files(reversed_order = True):
+  print('undo_all_files:')
+  print('  - reversed_order: ' + str(reversed_order))
+
+  all_files = list(notepad.getFiles())
+  active_file = notepad.getCurrentFilename()
+
+  num_undo = 0
+
+  if reversed_order:
+    for f in reversed(all_files):
+      notepad.activateFile(f[0])
+      editor.undo()
+      num_undo += 1
+  else:
+    for f in all_files:
+      notepad.activateFile(f[0])
+      editor.undo()
+      num_undo += 1
+
+  notepad.activateFile(active_file)
+
+  print()
+  print('* Number of undo paths: ' + str(num_undo))
+  print()
+
+def redo_all_files(reversed_order = True):
+  print('redo_all_files:')
+  print('  - reversed_order: ' + str(reversed_order))
+
+  all_files = list(notepad.getFiles())
+  active_file = notepad.getCurrentFilename()
+
+  num_redo = 0
+
+  if reversed_order:
+    for f in reversed(all_files):
+      notepad.activateFile(f[0])
+      editor.redo()
+      num_redo += 1
+  else:
+    for f in all_files:
+      notepad.activateFile(f[0])
+      editor.redo()
+      num_redo += 1
+
+  notepad.activateFile(active_file)
+
+  print()
+  print('* Number of redo paths: ' + str(num_redo))
+  print()
+
 def process_notepadpp_windows(restore_if_open_inplace, out_params):
   import ctypes
   from ctypes import wintypes

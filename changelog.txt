@@ -1,3 +1,7 @@
+2024.05.24:
+* new: scripts/python/tacklebar: undo_all_files.py, redo_all_files.py: scripts to undo/redo in all opened file tabs
+* changed: README_EN.txt: readme update
+
 2024.05.21:
 * changed: scripts/python/tacklebar/reactivate_all_files_*.py: by default avoid current tab activation at last
 

@@ -1,5 +1,5 @@
 * README_EN.txt
-* 2024.05.04
+* 2024.05.24
 * contools--notepadplusplus
 
 1. DESCRIPTION
@@ -8,7 +8,8 @@
 4. INSTALLATION
 5. SCRIPTS
 6. USAGE
-7. AUTHOR
+7. SHORTCUTS
+8. AUTHOR
 
 -------------------------------------------------------------------------------
 1. DESCRIPTION
@@ -68,11 +69,28 @@ Now each time when the Notepad++ starts it will call to `startup.py` script.
 
 * `/scripts/python/tacklebar/toggle_readonly_flag_for_all_tabs.py`
 
-  Script to toggle the Read-Only flag for all TABS (not files).
+  Script to toggle the inner Read-Only flag for all tabs (in the Notepad++).
 
 * `/scripts/python/tacklebar/clear_readonly_flag_from_all_files.py`
 
-  Script to clear the Read-Only flag from all TAB FILES.
+  Script to clear the Read-Only flag from all opened tab files in the file
+  system.
+
+* `/scripts/python/tacklebar/undo_all_files.py`
+  `/scripts/python/tacklebar/redo_all_files.py`
+
+  Script to undo/redo the history for all opened tab files.
+  Useful to undo/redo the replacement action after the `Find and Replace`
+  dialog in all opened file tabs.
+
+  Available shortcut to use:
+    * Undo: CTRL+ALT-Z (`CTRL-SHIFT-Z` is reserved for the redo)
+    * Redo: CTRL+ALT-Y
+
+  CAUTION:
+    Script does undo/redo for ALL tabs, even for those, where the action is not
+    needed to be done. So it can undo/redo not the last/first the
+    `Find and Replace` dialog replacement.
 
 * `/scripts/python/startup.py` -
 
@@ -162,6 +180,22 @@ Additional command line arguments:
 For the rest options see the `npplib.py` script file.
 
 -------------------------------------------------------------------------------
-7. AUTHOR
+7. SHORTCUTS
+-------------------------------------------------------------------------------
+The Notepad++ has no functionality to add a shortcut at the moment and only
+can modify the existing one.
+You can use a plugin to add the functionality. The `PythonScript` plugin still
+can do this.
+
+See details:
+  https://community.notepad-plus-plus.org/post/28150
+  https://community.notepad-plus-plus.org/topic/14703/run-python-script-pythonscript-plugin-with-a-shortcut/3
+
+NOTE:
+  You must restart the Notepad++ to apply the modificated shortcuts in the
+  Shortcut Mapper.
+
+-------------------------------------------------------------------------------
+8. AUTHOR
 -------------------------------------------------------------------------------
 Andrey Dibrov (andry at inbox dot ru)
