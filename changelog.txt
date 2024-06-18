@@ -1,3 +1,6 @@
+2024.06.18:
+* changed: scripts/python/startup.py: content of `tacklebar` directory moved into `scripts` subdirectory to be able to put `contools--notepadplusplus` repository root files into `tacklebar` directory
+
 2024.05.24:
 * new: scripts/python/tacklebar: undo_all_files.py, redo_all_files.py: scripts to undo/redo in all opened file tabs
 * changed: README_EN.txt: readme update
