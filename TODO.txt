@@ -6,5 +6,9 @@
   This would use the last created instance instead of a not multi (shared)
   instance.
 
-  Reimplement `-append` without `-allow-multi-instance` flag to appen to a last
-  not multi instance instead of to a first found.
+  Reimplement `-append` without `-allow-multi-instance` flag to append to a
+  last created not multi instance instead of to a first found.
+
+* Improve `-append` functionality and not allow to append to a different
+  user instance. Search by default only the same user instances.
+  
