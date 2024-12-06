@@ -1,3 +1,12 @@
+2024.12.06:
+* new: scripts/python/tacklebar/libs/npplib.py: added `close_all_*_files*` functions
+* new: scripts/python/tacklebar: reopen_all_*_files_activate_forward.py, close_all_*_files_activate_forward.py: added related scripts
+* changed: scripts/python/tacklebar/reopen_all_files_activate_forward.py: removed as less reliable
+* changed: scripts/python/tacklebar/libs/npplib.py: `reopen_all_files` does not reopen by default unsaved or edited files
+* changed: scripts/python/tacklebar/libs/npplib.py: minor improvements
+* changed: README_EN.txt: readme update
+* changed: TODO.txt: todo update
+
 2024.06.22:
 * changed: TODO.txt: todo update
 

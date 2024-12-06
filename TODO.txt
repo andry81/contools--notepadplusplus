@@ -11,4 +11,11 @@
 
 * Improve `-append` functionality and not allow to append to a different
   user instance. Search by default only the same user instances.
-  
+
+* scripts/python/tacklebar/libs/npplib.py:
+
+  Restore activation order using
+  `notepad.callback(bufferactivated_callback, [NOTIFICATION.BUFFERACTIVATED])`.
+
+    def bufferactivated_callback(args):
+      visited_tab_list.append(notepad.getCurrentFilename())

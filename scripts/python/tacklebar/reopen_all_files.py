@@ -17,6 +17,7 @@ else:
 
 # inject globals
 setattr(npplib, 'notepad', notepad)
+setattr(npplib, 'editor', editor)
 
 # execute
 npplib.reopen_all_files()

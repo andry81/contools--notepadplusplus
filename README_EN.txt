@@ -1,5 +1,5 @@
 * README_EN.txt
-* 2024.05.24
+* 2024.12.06
 * contools--notepadplusplus
 
 1. DESCRIPTION
@@ -57,11 +57,16 @@ Now each time when the Notepad++ starts it will call to `startup.py` script.
 
   Main library script.
 
-* `/scripts/python/tacklebar/reopen_all_files*.py`
+* `/scripts/python/tacklebar/reopen_all_*files*.py`
 
   Scripts to workaround the Notepad++ bug:
     `[Feature Request] Language auto detection from simplified session file`:
     https://github.com/notepad-plus-plus/notepad-plus-plus/issues/5844
+
+* `/scripts/python/tacklebar/close_all_saved_files_*.py`
+  `/scripts/python/tacklebar/close_all_not_altered_files_*.py`
+
+  Scripts to safely close all saved or not altered files.
 
 * `/scripts/python/tacklebar/reactivate_all_files_*.py`
 

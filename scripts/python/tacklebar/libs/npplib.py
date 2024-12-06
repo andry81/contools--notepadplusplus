@@ -69,33 +69,138 @@ def reactivate_all_files(reactivate_reversed = True, reactive_current_at_last = 
   print('* Number of activated paths: ' + str(num_reopened))
   print()
 
-# NOTE: `reactivate_reversed = False` - DOES NOT change activation order
-def reopen_all_files(reactivate_reversed = True):
+# NOTE:
+#   `reactivate_reversed = False` - DOES NOT change activation order
+#   `allow_unsaved = True` - where has an unsaved modification
+#   `allow_edited = True` - where an undo or redo list is not empty
+#
+def reopen_all_files(reactivate_reversed = True, allow_unsaved = False, allow_edited = False):
   print('reopen_all_files:')
   print('  - reactivate_reversed: ' + str(reactivate_reversed))
+  print('  - allow_unsaved:       ' + str(allow_unsaved))
+  print('  - allow_edited:        ' + str(allow_edited))
 
   all_files = list(notepad.getFiles())
   active_file = notepad.getCurrentFilename()
 
-  notepad.saveAllFiles()
-  notepad.closeAll()
+  if (allow_unsaved and allow_edited):
+    notepad.saveAllFiles()
+    notepad.closeAll()
 
   num_reopened = 0
+  num_skipped = 0
+  file_index = 0
+
+  if (allow_unsaved and allow_edited):
+    for f in all_files:
+      print('  [{}] {}'.format(file_index, f[0]))
+      notepad.open(f[0])
+      num_reopened += 1
+      file_index += 1
+  else:
+    # loop with tabs reactivation to call functions
+    for f in all_files:
+      notepad.activateFile(f[0])
+      is_unsaved = editor.getModify()
+      can_undo = editor.canUndo()
+      can_redo = editor.canRedo()
+      if (allow_unsaved or not is_unsaved) and (allow_edited or (not can_undo and not can_redo)):
+        print('  [{}] (reopened)        {}'.format(file_index, f[0]))
+        notepad.close()
+        notepad.open(f[0])
+        num_reopened += 1
+      else:
+        print('  [{}] {}{}{}'.format(file_index,
+          ('[unsaved]' if is_unsaved else '         ') + ('[edited]' if can_undo or can_redo else '        '),
+          ' ' if is_unsaved or can_undo or can_redo else '', f[0])) 
+        num_skipped += 1
+
+      file_index += 1
+
+  if (allow_unsaved and allow_edited):
+    if reactivate_reversed:
+      for f in reversed(all_files):
+        notepad.activateFile(f[0])
+  else:
+    # have to reactivate again
+    all_files = list(notepad.getFiles())
+
+    if not reactivate_reversed:
+      for f in all_files:
+        notepad.activateFile(f[0])
+    else:
+      for f in reversed(all_files):
+        notepad.activateFile(f[0])
+
+  notepad.activateFile(active_file)
+
+  print()
+  print('* Number of reopened paths: ' + str(num_reopened))
+  print('* Number of skipped paths:  ' + str(num_skipped))
+  print()
+
+# not altered - not modified (but may be saved) and not edited
+def reopen_all_not_altered_files(reactivate_reversed = True):
+  return reopen_all_files(reactivate_reversed, False, False)
+
+# can be edited
+def reopen_all_saved_files(reactivate_reversed = True):
+  return reopen_all_files(reactivate_reversed, False, True)
+
+def close_all_files(reactivate_reversed = True, allow_unsaved = False, allow_edited = False):
+  print('close_all_files:')
+  print('  - reactivate_reversed: ' + str(reactivate_reversed))
+  print('  - allow_unsaved:       ' + str(allow_unsaved))
+  print('  - allow_edited:        ' + str(allow_edited))
+
+  all_files = list(notepad.getFiles())
+  active_file = notepad.getCurrentFilename()
+
+  num_closed = 0
+  num_skipped = 0
+  file_index = 0
 
   for f in all_files:
-    print('  [{}] {}'.format(num_reopened, f[0]))
-    notepad.open(f[0])
-    num_reopened += 1
+    notepad.activateFile(f[0])
+    is_unsaved = editor.getModify()
+    can_undo = editor.canUndo()
+    can_redo = editor.canRedo()
+    if (allow_unsaved or not is_unsaved) and (allow_edited or (not can_undo and not can_redo)):
+      print('  [{}] (closed)          {}'.format(file_index, f[0]))
+      notepad.close()
+      num_closed += 1
+    else:
+      print('  [{}] {}{}{}'.format(file_index,
+        ('[unsaved]' if is_unsaved else '         ') + ('[edited]' if can_undo or can_redo else '        '),
+        ' ' if is_unsaved or can_undo or can_redo else '', f[0])) 
+      num_skipped += 1
 
-  if reactivate_reversed:
+    file_index += 1
+
+  # have to reactivate again
+  all_files = list(notepad.getFiles())
+
+  if not reactivate_reversed:
+    for f in all_files:
+      notepad.activateFile(f[0])
+  else:
     for f in reversed(all_files):
       notepad.activateFile(f[0])
 
   notepad.activateFile(active_file)
 
   print()
-  print('* Number of reopened paths: ' + str(num_reopened))
+  print('* Number of closed paths:  ' + str(num_closed))
+  print('* Number of skipped paths: ' + str(num_skipped))
   print()
+
+# not altered - not modified (but may be saved) and not edited
+def close_all_not_altered_files(reactivate_reversed = True):
+  return close_all_files(reactivate_reversed, False, False)
+
+# can be edited
+def close_all_saved_files(reactivate_reversed = True):
+  return close_all_files(reactivate_reversed, False, True)
 
 def undo_all_files(reversed_order = True):
   print('undo_all_files:')
@@ -109,13 +214,17 @@ def undo_all_files(reversed_order = True):
   if reversed_order:
     for f in reversed(all_files):
       notepad.activateFile(f[0])
-      editor.undo()
-      num_undo += 1
+      if editor.canUndo():
+        print('  [{}] {}'.format(num_undo, f[0]))
+        editor.undo()
+        num_undo += 1
   else:
     for f in all_files:
       notepad.activateFile(f[0])
-      editor.undo()
-      num_undo += 1
+      if editor.canUndo():
+        print('  [{}] {}'.format(num_undo, f[0]))
+        editor.undo()
+        num_undo += 1
 
   notepad.activateFile(active_file)
 
@@ -135,13 +244,17 @@ def redo_all_files(reversed_order = True):
   if reversed_order:
     for f in reversed(all_files):
       notepad.activateFile(f[0])
-      editor.redo()
-      num_redo += 1
+      if editor.canRedo():
+        print('  [{}] {}'.format(num_redo, f[0]))
+        editor.redo()
+        num_redo += 1
   else:
     for f in all_files:
       notepad.activateFile(f[0])
-      editor.redo()
-      num_redo += 1
+      if editor.canRedo():
+        print('  [{}] {}'.format(num_redo, f[0]))
+        editor.redo()
+        num_redo += 1
 
   notepad.activateFile(active_file)
 
@@ -260,6 +373,8 @@ def process_extra_command_line():
   do_append = False
   do_append_by_child_instance = False
   do_reopen_all_files = False
+  allow_reopen_unsaved_files = False
+  allow_reopen_edited_files = False # can undo or redo
   do_restore_if_open_inplace = False
 
   is_multi_instance = False
@@ -311,6 +426,10 @@ def process_extra_command_line():
         next_arg_is_chdir_path = True
       elif arg == '-reopen_all_files':
         do_reopen_all_files = True
+      elif arg == '-allow_reopen_unsaved_files':
+        allow_reopen_unsaved_files = True
+      elif arg == '-allow_reopen_edited_files':
+        allow_reopen_edited_files = True
       elif arg == '-restore_if_open_inplace':
         do_restore_if_open_inplace = True
       elif arg == '-append':
@@ -719,7 +838,7 @@ def process_extra_command_line():
       sys.exit(0)
 
   if do_reopen_all_files:
-    reopen_all_files()
+    reopen_all_files(True, allow_reopen_unsaved_files, allow_reopen_edited_files)
 
 def open_from_file_list(file_list):
   print('open_from_file_list:')
