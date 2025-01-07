@@ -1,3 +1,7 @@
+2025.01.07:
+* new: README.md: markdown readme file
+* new: .github/FUNDING.yml: shared donate link
+
 2024.12.06:
 * new: scripts/python/tacklebar/libs/npplib.py: added `close_all_*_files*` functions
 * new: scripts/python/tacklebar: reopen_all_*_files_activate_forward.py, close_all_*_files_activate_forward.py: added related scripts
