@@ -1,4 +1,4 @@
-> **Note** To clone only required set of git submodules using sparse checkout feature, you must use [vcstool](https://github.com/aaronplusone/vcstool/tree/feature-sparse-checkouts) script and `.externals` file, otherwise the `git clone --recurse-submodules` would use `.gitmodules` and checkout all modules recursively and completely, including all nested submodules which is not required to checkout.
+> **Note** To checkout externals read the details here: https://github.com/andry81/externals
 
 <p align="center">Set of scripts for the Notepad++ Python Scripts plugin.</p>
 

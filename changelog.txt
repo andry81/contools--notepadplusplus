@@ -1,4 +1,7 @@
 2025.01.07:
+* changed: README.md: externals note update
+
+2025.01.07:
 * new: README.md: markdown readme file
 * new: .github/FUNDING.yml: shared donate link
 
