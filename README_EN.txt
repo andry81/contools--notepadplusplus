@@ -1,5 +1,5 @@
 * README_EN.txt
-* 2024.12.06
+* 2025.01.18
 * contools--notepadplusplus
 
 1. DESCRIPTION
@@ -39,7 +39,9 @@ Second mirror:
 4. INSTALLATION
 -------------------------------------------------------------------------------
 
-1. Install `PythonScript` plugin within the Notepad++ `Plugins` menu item.
+1. Install `PythonScript` plugin within the Notepad++ `Plugins` menu item or
+   download the installer from:
+     https://github.com/bruderstein/PythonScript/releases
 
 2. Copy scripts into `scripts` subdirectory inside the Notepad++ directory:
    `../plugins/Config/PythonScript`.
@@ -96,6 +98,8 @@ Now each time when the Notepad++ starts it will call to `startup.py` script.
     Script does undo/redo for ALL tabs, even for those, where the action is not
     needed to be done. So it can undo/redo not the last/first the
     `Find and Replace` dialog replacement.
+    To avoid the issue you have to open a standalone Notepad++ instance to
+    undo/redo only a required set of tabs.
 
 * `/scripts/python/startup.py` -
 

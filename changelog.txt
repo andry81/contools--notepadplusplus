@@ -1,3 +1,6 @@
+2025.01.18:
+* changed: README_EN.txt: readme update
+
 2025.01.07:
 * changed: README.md: externals note update
 
