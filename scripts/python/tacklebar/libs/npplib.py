@@ -612,10 +612,14 @@ def process_extra_command_line():
         if do_open_as_is:
           if do_open_inplace:
             notepad.open(file_path)
+
+            if notepad.getCurrentFilename() == file_path:
+              num_success_paths += 1
+            else:
+              print("    - error: path is not opened.")
           else:
             append_cmdline_file_list.append(file_path)
-
-          num_success_paths += 1
+            num_success_paths += 1
         else:
           file_path_unc = file_path_unc_prefix + file_path_decoded
 
@@ -629,27 +633,37 @@ def process_extra_command_line():
 
             if do_open_inplace:
               notepad.open(str(file_path_short_buf.value))
+
+              if notepad.getCurrentFilename() == file_path:
+                num_success_paths += 1
+              else:
+                print("    - error: path is not opened.")
             else:
               append_cmdline_file_list.append(str(file_path_short_buf.value))
-
-            num_success_paths += 1
+              num_success_paths += 1
           else:
-            print("    - path may be is not opened: `ctypes.windll.kernel32.GetShortPathNameW` call is failed.")
+            print("    - error: path is not opened: `ctypes.windll.kernel32.GetShortPathNameW` call is failed.")
 
             # fall back to long path
             if do_open_inplace:
               notepad.open(file_path)
-            # ISSUE:
-            #   We have to skip append into a child command line, because in that case Notepad++ does not open the entire command line
-            #   including not long file path arguments if at least one argument is a long file path!
-            #
-            #   OS:           Windows 8 x64
-            #   Notepad++:    8.5.7 32-bit
-            #   PythonScript: 1.5.4.0 32-bit
-            #   Python:       2.7.18 32-bit
-            #
-            #else:
-            #  append_cmdline_file_list.append(file_path)
+
+              if notepad.getCurrentFilename() == file_path:
+                num_success_paths += 1
+              else:
+                print("    - error: path is not opened.")
+            else:
+              # ISSUE:
+              #   We have to skip append into a child command line, because in that case Notepad++ does not open the entire command line
+              #   including not long file path arguments if at least one argument is a long file path!
+              #
+              #   OS:           Windows 8 x64
+              #   Notepad++:    8.5.7 32-bit
+              #   PythonScript: 1.5.4.0 32-bit
+              #   Python:       2.7.18 32-bit
+              #
+              #append_cmdline_file_list.append(file_path)
+              print("    - error: path is not opened.")
 
           #file_path_short_buf = None
 

@@ -1,3 +1,6 @@
+2025.02.11:
+* fixed: scripts/python/tacklebar/libs/npplib.py: wrong success number of inplace opened files
+
 2025.02.03:
 * changed: README.md: github markdown blockquotes update
 
