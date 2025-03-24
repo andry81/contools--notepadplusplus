@@ -1,7 +1,7 @@
 > [!NOTE]
 > To checkout externals read the details here: https://github.com/andry81/externals
 
-<p align="center">Set of scripts for the Notepad++ Python Scripts plugin.</p>
+<p align="center">Set of scripts for the Notepad++ Python Script plugin.</p>
 
 <!-- -- >
 <p align="center">

@@ -1,5 +1,5 @@
 * README_EN.txt
-* 2025.01.18
+* 2025.03.25
 * contools--notepadplusplus
 
 1. DESCRIPTION
@@ -14,7 +14,7 @@
 -------------------------------------------------------------------------------
 1. DESCRIPTION
 -------------------------------------------------------------------------------
-Set of scripts for the Notepad++ Python Scripts plugin.
+Set of scripts for the Notepad++ Python Script plugin.
 
 -------------------------------------------------------------------------------
 2. LICENSE

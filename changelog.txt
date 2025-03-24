@@ -1,3 +1,6 @@
+2025.03.25:
+* changed: README_EN.txt, README.md: readmes update
+
 2025.02.11:
 * fixed: scripts/python/tacklebar/libs/npplib.py: wrong success number of inplace opened files
 
