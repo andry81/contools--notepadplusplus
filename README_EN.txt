@@ -1,5 +1,5 @@
 * README_EN.txt
-* 2025.03.25
+* 2025.05.09
 * contools--notepadplusplus
 
 1. DESCRIPTION
@@ -100,6 +100,10 @@ Now each time when the Notepad++ starts it will call to `startup.py` script.
     `Find and Replace` dialog replacement.
     To avoid the issue you have to open a standalone Notepad++ instance to
     undo/redo only a required set of tabs.
+
+* `/scripts/python/tacklebar/close_all_npp_windows.py`
+
+  Script to close all Notepad++ windows including current process instance.
 
 * `/scripts/python/startup.py` -
 

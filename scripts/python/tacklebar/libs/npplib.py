@@ -198,7 +198,7 @@ def close_all_files(reactivate_reversed = True, allow_unsaved = False, allow_edi
 def close_all_not_altered_files(reactivate_reversed = True):
   return close_all_files(reactivate_reversed, False, False)
 
-# can be edited
+# files can be edited
 def close_all_saved_files(reactivate_reversed = True):
   return close_all_files(reactivate_reversed, False, True)
 
@@ -262,7 +262,14 @@ def redo_all_files(reversed_order = True):
   print('* Number of redo paths: ' + str(num_redo))
   print()
 
-def process_notepadpp_windows(restore_if_open_inplace, out_params):
+class EnumNppWindows:
+  notepadpp_hwnd = None
+  not_multiinst_wnd_list = [] # list of Notepad++ instances w/o `-multiInst` option
+  not_multiinst_pid_list = []
+  multiinst_wnd_list = []     # list of Notepad++ instances w/ `-multiInst` option
+  multiinst_pid_list = []
+
+def enum_notepadpp_windows(enum_npp_windows_out):
   import ctypes
   from ctypes import wintypes
   import psutil, os
@@ -306,7 +313,7 @@ def process_notepadpp_windows(restore_if_open_inplace, out_params):
     if u'Notepad++' in wnd_class_name_buf.value:
       user32.GetWindowThreadProcessId(hwnd, ctypes.byref(process_id))
       if process_id.value == in_params.current_pid:
-        out_params.notepadpp_hwnd = hwnd
+        enum_npp_windows_out.notepadpp_hwnd = hwnd
       else:
         cmdline_list = psutil.Process(process_id.value).cmdline()
 
@@ -328,25 +335,24 @@ def process_notepadpp_windows(restore_if_open_inplace, out_params):
             break
 
         if is_not_multi_instance:
-          out_params.not_multiinst_wnd_list.append(hwnd)
-          out_params.not_multiinst_pid_list.append(process_id.value)
+          enum_npp_windows_out.not_multiinst_wnd_list.append(hwnd)
+          enum_npp_windows_out.not_multiinst_pid_list.append(process_id.value)
+        else:
+          enum_npp_windows_out.multiinst_wnd_list.append(hwnd)
+          enum_npp_windows_out.multiinst_pid_list.append(process_id.value)
 
     return True # continue enumerating
 
   user32.EnumWindows(WNDENUMPROC(enum_notepadpp_windows), 0)
 
-  print('process_notepadpp_windows:')
+  print('enum_notepadpp_windows:')
   print('  - pid: ' + str(in_params.current_pid))
-  print('  - shared instances: ' + str(out_params.not_multiinst_pid_list))
-
-  if restore_if_open_inplace:
-    if out_params.notepadpp_hwnd and not len(out_params.not_multiinst_pid_list): # open inplace
-      print('  - instance restored')
-      user32.ShowWindow(out_params.notepadpp_hwnd, SW_RESTORE)
-    else:
-      print('  - instance NOT restored')
+  print('  - not multi (shared) instances: ' + str(enum_npp_windows_out.not_multiinst_pid_list))
+  print('  - multi (not shared) instances: ' + str(enum_npp_windows_out.multiinst_pid_list))
 
 def process_extra_command_line():
+  import ctypes
+  from ctypes import wintypes
   import sys, os, io, shlex
 
   print('process_extra_command_line:')
@@ -479,17 +485,19 @@ def process_extra_command_line():
 
     # construct child command line
     if do_append:
-      class OutParams:
-        notepadpp_hwnd = None
-        not_multiinst_wnd_list = [] # list of Notepad++ instances w/o `-multiInst` option
-        not_multiinst_pid_list = []
+      enum_npp_windows = EnumNppWindows()
 
-      out_params = OutParams()
+      # enumerate Notepad++ instances as standalone windows
+      enum_notepadpp_windows(enum_npp_windows)
 
-      # process Notepad++ instances as standalone windows
-      process_notepadpp_windows(do_restore_if_open_inplace, out_params)
+      if do_restore_if_open_inplace:
+        if enum_npp_windows.notepadpp_hwnd and not len(enum_npp_windows.not_multiinst_pid_list): # open inplace
+          print('  - instance restored')
+          user32.ShowWindow(enum_npp_windows.notepadpp_hwnd, SW_RESTORE)
+        else:
+          print('  - instance NOT restored')
 
-      if len(out_params.not_multiinst_pid_list):
+      if len(enum_npp_windows.not_multiinst_pid_list):
         do_open_inplace = False
 
         append_cmdline_file_list = list()
@@ -675,7 +683,7 @@ def process_extra_command_line():
 
   if not do_open_inplace:
     if not do_append_by_child_instance:
-      print('sending WM_COPYDATA messages to pid={}:'.format(out_params.not_multiinst_pid_list[0]))
+      print('sending WM_COPYDATA messages to pid={}:'.format(enum_npp_windows.not_multiinst_pid_list[0]))
     else:
       print('executing child subprocess:')
 
@@ -781,7 +789,7 @@ def process_extra_command_line():
             else:
               break
 
-        if not do_append_by_child_instance and len(out_params.not_multiinst_wnd_list):
+        if not do_append_by_child_instance and len(enum_npp_windows.not_multiinst_wnd_list):
           print('  - WM_COPYDATA: ' + str(child_subprocess_prefix_cmdline_list))
           print('    command line length: ' + str(child_subprocess_prev_cmdline_len))
 
@@ -798,8 +806,8 @@ def process_extra_command_line():
           copydata.cbData = ctypes.sizeof(child_cmdline_buf)
           copydata.lpData = ctypes.cast(child_cmdline_buf, wintypes.LPVOID)
 
-          user32.SendMessageW(out_params.not_multiinst_wnd_list[0], WM_COPYDATA,
-            out_params.notepadpp_hwnd if not out_params.notepadpp_hwnd is None else 0, ctypes.addressof(copydata))
+          user32.SendMessageW(enum_npp_windows.not_multiinst_wnd_list[0], WM_COPYDATA,
+            enum_npp_windows.notepadpp_hwnd if not enum_npp_windows.notepadpp_hwnd is None else 0, ctypes.addressof(copydata))
         else:
           print('  - ' + str(child_subprocess_prefix_cmdline_list))
           print('    command line length: ' + str(child_subprocess_prev_cmdline_len))
@@ -819,7 +827,7 @@ def process_extra_command_line():
           #   Python:       2.7.18 32-bit
           #
           #   Suggestion:
-          #     Child Notepad++ process use SendMessage to a random Notepad++ instance excluding itself,
+          #     Child Notepad++ process uses SendMessage to a random Notepad++ instance excluding itself,
           #     when the parent instance is blocked in the main thread by this function call to the parent process.
           #
           #   Workaround:
@@ -836,14 +844,14 @@ def process_extra_command_line():
 
           #time.sleep(0.100) # pause to partially sync order of opening
 
-      if not do_append_by_child_instance and len(out_params.not_multiinst_wnd_list):
+      if not do_append_by_child_instance and len(enum_npp_windows.not_multiinst_wnd_list):
         if not no_activate_after_append:
           user32.SetForegroundWindow.restype = wintypes.BOOL
           user32.SetForegroundWindow.argtypes = [
-            wintypes.HWND     # [in] HWND   hWnd,
+            wintypes.HWND     # [in] HWND   hWnd
           ]
 
-          user32.SetForegroundWindow(out_params.not_multiinst_wnd_list[0])
+          user32.SetForegroundWindow(enum_npp_windows.not_multiinst_wnd_list[0])
 
     else:
       print('  - None')
@@ -867,3 +875,44 @@ def open_from_file_list(file_list):
   print()
   print('* Number of opened paths: ' + str(num_opened))
   print()
+
+# closes (not minimizes) all windows
+def close_all_npp_windows(not_multiinst = True, current_proc = True):
+  import ctypes
+  from ctypes import wintypes
+
+  enum_npp_windows = EnumNppWindows()
+
+  # enumerate Notepad++ instances as standalone windows
+  enum_notepadpp_windows(enum_npp_windows)
+
+  user32 = ctypes.windll.user32
+
+  if not hasattr(wintypes, 'LRESULT'):
+    wintypes.LRESULT = ctypes.c_ssize_t
+
+  user32.PostMessageW.restype = wintypes.LRESULT
+  user32.PostMessageW.argtypes = [
+    wintypes.HWND,    # [in] HWND   hWnd,
+    wintypes.UINT,    # [in] UINT   Msg,
+    wintypes.WPARAM,  # [in] WPARAM wParam,
+    wintypes.LPARAM   # [in] LPARAM lParam
+  ]
+
+  WM_CLOSE = 0x0010
+
+  # CAUTION:
+  #   We close all windows, including all in a process.
+
+  # multi instance windows at first
+  for hwnd in enum_npp_windows.multiinst_wnd_list:
+    user32.PostMessageW(hwnd, WM_CLOSE, 0, 0)
+
+  # not multi instance (shared) windows at second
+  if not_multiinst:
+    for hwnd in enum_npp_windows.not_multiinst_wnd_list:
+      user32.PostMessageW(hwnd, WM_CLOSE, 0, 0)
+
+  # the current process at the last
+  if current_proc:
+    notepad.menuCommand(MENUCOMMAND.FILE_EXIT)
