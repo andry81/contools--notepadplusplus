@@ -403,6 +403,7 @@ def process_extra_command_line():
     elif next_arg_is_chdir_path:
       chdir_path = str(arg)
       next_arg_is_chdir_path = False
+      print('--chdir ' + str(chdir_path))
     elif next_arg_is_open_path_limit:
       open_path_len_limit = max(int(arg), 255) # 255 is builtin minimum
       next_arg_is_open_path_limit = False
@@ -416,12 +417,16 @@ def process_extra_command_line():
     else:
       if arg == '-from_utf8':
         from_utf8 = True
+        print(arg)
       elif arg == '-from_utf16':
         from_utf16 = True
+        print(arg)
       elif arg == '-from_utf16le':
         from_utf16le = True
+        print(arg)
       elif arg == '-from_utf16be':
         from_utf16be = True
+        print(arg)
       elif arg == '--open_from_file_list':
         next_arg_is_file_list_path = True
       elif arg == '--open_short_path_if_gt_limit':
@@ -432,26 +437,37 @@ def process_extra_command_line():
         next_arg_is_chdir_path = True
       elif arg == '-reopen_all_files':
         do_reopen_all_files = True
+        print(arg)
       elif arg == '-allow_reopen_unsaved_files':
         allow_reopen_unsaved_files = True
+        print(arg)
       elif arg == '-allow_reopen_edited_files':
         allow_reopen_edited_files = True
+        print(arg)
       elif arg == '-restore_if_open_inplace':
         do_restore_if_open_inplace = True
+        print(arg)
       elif arg == '-append':
         do_append = True
+        print(arg)
       elif arg == '-append_by_child_instance':
         do_append_by_child_instance = True
+        print(arg)
       elif arg == '-multiInst':
         is_multi_instance = True
+        print(arg)
       elif arg == '-no_activate_after_append':
         no_activate_after_append = True
+        print(arg)
       elif arg == '-no_exit_after_append':
         no_exit_after_append = True
+        print(arg)
       elif arg == '-launcher':
         is_launcher = True
+        print(arg)
       elif arg == '-debug':
         is_debug = True
+        print(arg)
 
   #if is_debug:
   #  pass
@@ -527,7 +543,6 @@ def process_extra_command_line():
             elif next_arg_is_open_path_limit:
               open_path_len_limit = max(int(arg), 255) # 255 is builtin minimum
               next_arg_is_open_path_limit = False
-              print('--open_short_path_if_gt_limit ' + str(open_path_len_limit))
             else:
               if arg == '-nosession':
                 continue

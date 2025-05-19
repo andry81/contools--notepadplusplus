@@ -1,3 +1,6 @@
+2025.05.20:
+* fixed: scripts/python/tacklebar/libs/npplib.py: missed to print all extra command line flags
+
 2025.05.09:
 * new: scripts/python/tacklebar/libs/npplib.py: added `close_all_npp_windows` function
 * new: scripts/python/tacklebar/close_all_npp_windows.py: added related script
