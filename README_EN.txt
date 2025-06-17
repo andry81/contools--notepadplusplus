@@ -1,5 +1,5 @@
 * README_EN.txt
-* 2025.05.09
+* 2025.06.18
 * contools--notepadplusplus
 
 1. DESCRIPTION
@@ -58,6 +58,10 @@ Now each time when the Notepad++ starts it will call to `startup.py` script.
 * `/scripts/python/tacklebar/libs/npplib.py`
 
   Main library script.
+
+* `/scripts/python/tacklebar/open_new_*_from_current_tab_text_as_file_path_list.py`
+
+  Scripts to search the current tab text for file paths and open them.
 
 * `/scripts/python/tacklebar/reopen_all_*files*.py`
 
@@ -125,6 +129,10 @@ notepad++.exe -nosession -multiInst -z -from_utf16 -z --open_from_file_list -z "
 notepad++.exe -nosession -multiInst -z -from_utf16le -z --open_from_file_list -z "<utf-16le-without-bom-paths-list-file>"
 
 Additional command line arguments:
+
+`-z --remove_file_list_after_open`
+
+  Remove the file list after all paths from it is opened.
 
 `-z --open_short_path_if_gt_limit -z 258`
 
