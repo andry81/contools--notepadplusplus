@@ -1,3 +1,7 @@
+2025.06.29:
+* new: deploy/plugins/MultiReplace: moved from `contools`, `tacklebar` and `tacklelib` projects
+* changed: README_EN.txt: readme update
+
 2025.06.18:
 * fixed: scripts/python/tacklebar/libs/npplib.py: execution fixup
 * new: scripts/python/tacklebar/libs/npplib.py: added `open_new_*_from_current_tab_text_as_file_path_list` functions

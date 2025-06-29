@@ -1,15 +1,16 @@
 * README_EN.txt
-* 2025.06.18
+* 2025.06.29
 * contools--notepadplusplus
 
 1. DESCRIPTION
 2. LICENSE
 3. REPOSITORIES
-4. INSTALLATION
-5. SCRIPTS
-6. USAGE
-7. SHORTCUTS
-8. AUTHOR
+5. DISTRIBUTION
+6. INSTALLATION
+7. SCRIPTS
+8. USAGE
+9. SHORTCUTS
+10. AUTHOR
 
 -------------------------------------------------------------------------------
 1. DESCRIPTION
@@ -36,14 +37,24 @@ Second mirror:
     https://gitlab.com/andry81/contools-notepadplusplus.git
 
 -------------------------------------------------------------------------------
-4. INSTALLATION
+5. DISTRIBUTION
+-------------------------------------------------------------------------------
+Catalog of applications, tools, modules and files included in the distribution:
+
+  * Python scripts for Notepad++ PythonScript plugin using from `tacklebar`
+    project.
+
+  * List files for Notepad++ MultiReplace plugin using from Notepad++.
+
+-------------------------------------------------------------------------------
+6. INSTALLATION
 -------------------------------------------------------------------------------
 
 1. Install `PythonScript` plugin within the Notepad++ `Plugins` menu item or
    download the installer from:
      https://github.com/bruderstein/PythonScript/releases
 
-2. Copy scripts into `scripts` subdirectory inside the Notepad++ directory:
+2. Copy scripts into `scripts` sub directory inside the Notepad++ directory:
    `../plugins/Config/PythonScript`.
 
 3. Change the initialization item from the PythonScript configuration menu
@@ -53,7 +64,7 @@ Second mirror:
 Now each time when the Notepad++ starts it will call to `startup.py` script.
 
 -------------------------------------------------------------------------------
-5. SCRIPTS
+7. SCRIPTS
 -------------------------------------------------------------------------------
 * `/scripts/python/tacklebar/libs/npplib.py`
 
@@ -114,7 +125,7 @@ Now each time when the Notepad++ starts it will call to `startup.py` script.
   Sript to call upon the Notepad++ instance launch.
 
 -------------------------------------------------------------------------------
-6. USAGE
+8. USAGE
 -------------------------------------------------------------------------------
 Basically, `startup.py` will automatically call upon start of each Notepad++
 instance.
@@ -151,21 +162,21 @@ Additional command line arguments:
 `-z -append`
 
   Append mode.
-  Runs Notepad++ instance to either open the files from a list inplace or
+  Runs Notepad++ instance to either open the files from a list in place or
   delegate files to open them in an already running Notepad++ process.
   If a Notepad++ instance already has been running and has no `-multiInst`
   parameter on the command line (shared instance), then the files delegates to
   open into that instance. After that the being launched instance does auto
   close.
   If there is no Notepad++ instance without `-multiInst` parameter on the
-  command line (not shared instance), then the files does open inplace.
+  command line (not shared instance), then the files does open in place.
 
 `-z -restore_if_open_inplace`
 
   Has meaning in the append mode.
   If there were no shared instances without `-multiInst` on the command line,
   then the Notepad++ does restore the window show state (unminimizes) before
-  open inplace.
+  open in place.
   Useful in case when the user want to hide the window blinking.
 
 `-z --child_cmdline_len_limit -z 4096`
@@ -201,7 +212,7 @@ Additional command line arguments:
 For the rest options see the `npplib.py` script file.
 
 -------------------------------------------------------------------------------
-7. SHORTCUTS
+9. SHORTCUTS
 -------------------------------------------------------------------------------
 The Notepad++ has no functionality to add a shortcut at the moment and only
 can modify the existing one.
@@ -213,10 +224,10 @@ See details:
   https://community.notepad-plus-plus.org/topic/14703/run-python-script-pythonscript-plugin-with-a-shortcut/3
 
 NOTE:
-  You must restart the Notepad++ to apply the modificated shortcuts in the
+  You must restart the Notepad++ to apply the modified shortcuts in the
   Shortcut Mapper.
 
 -------------------------------------------------------------------------------
-8. AUTHOR
+10. AUTHOR
 -------------------------------------------------------------------------------
 Andrey Dibrov (andry at inbox dot ru)
