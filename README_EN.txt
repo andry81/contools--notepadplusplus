@@ -1,5 +1,5 @@
 * README_EN.txt
-* 2025.06.29
+* 2025.08.01
 * contools--notepadplusplus
 
 1. DESCRIPTION
@@ -70,9 +70,20 @@ Now each time when the Notepad++ starts it will call to `startup.py` script.
 
   Main library script.
 
-* `/scripts/python/tacklebar/open_new_*_from_current_tab_text_as_file_path_list.py`
+* `/scripts/python/tacklebar/open_new_tab_from_current_tab_text_as_file_path_list.py`
 
-  Scripts to search the current tab text for file paths and open them.
+  Script to search the current tab text for file paths and print them into a
+  new tab. The text is prefixed by a comment with the tab file path.
+
+* `/scripts/python/tacklebar/open_new_instance_from_current_tab_text_as_file_path_list.py`
+
+  Script to search the current tab text for file paths and open them in a
+  standalone editor instance.
+
+* `/scripts/python/tacklebar/open_new_tab_from_all_file_tabs_text_as_file_path_list.py`
+
+  Script to search all file tabs text for file paths and print them into a new
+  tab. Each file tab path list is prefixed by a comment with the tab file path.
 
 * `/scripts/python/tacklebar/reopen_all_*files*.py`
 

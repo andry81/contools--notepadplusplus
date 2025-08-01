@@ -1,3 +1,15 @@
+2025.08.01:
+* fixed: scripts/python/tacklebar/libs/npplib.py: execution fixup
+* fixed: scripts/python/tacklebar/libs/npplib.py: `get_current_tab_text` function fixup
+* new: scripts/python/tacklebar/libs/open_new_*_from_current_tab_text_as_file_path_list.py: added file path detection beginning by an environment variable name placeholders (`%VAR%`, `$VAR`, `${VAR}`, `$(VAR)`, `$/{VAR}`)
+* new: scripts/python/tacklebar/libs/open_new_tab_from_all_file_tabs_text_as_file_path_list.py: script to search all file tabs text for file paths and print them into a new tab
+* new: scripts/python/tacklebar/libs/open_new_*_from_*_text_as_file_path_list.py: expand environment variables in whole path if a path begins by the `%VAR%` placeholder
+* new: scripts/python/tacklebar/libs/open_new_*_from_*_text_as_file_path_list.py: expand the path prefix only if a path begins by the $-variable placeholder
+* changed: scripts/python/tacklebar/libs/open_new_*_from_current_tab_text_as_file_path_list.py: improved file path detection to detect only absolute paths to reduce relative path false positives
+* changed: scripts/python/tacklebar/libs/open_new_tab_from_current_tab_text_as_file_path_list.py: add header comment with tab file path
+* changed: scripts/python/tacklebar/libs/open_new_*_from_current_tab_text_as_file_path_list.py: add file path prefix `file://` to be able to open a path by a click in a tab
+* changed: README_EN.txt: readme update
+
 2025.06.29:
 * new: deploy/plugins/MultiReplace: moved from `contools`, `tacklebar` and `tacklelib` projects
 * changed: README_EN.txt: readme update
@@ -6,7 +18,7 @@
 * fixed: scripts/python/tacklebar/libs/npplib.py: execution fixup
 * new: scripts/python/tacklebar/libs/npplib.py: added `open_new_*_from_current_tab_text_as_file_path_list` functions
 * new: scripts/python/tacklebar/libs/npplib.py: `--remove_file_list_after_open` flag to remove path list file after open
-* new: scripts/python/tacklebar/libs/open_new_*_from_current_tab_text_as_file_path_list.py: added respective scripts
+* new: scripts/python/tacklebar/open_new_*_from_current_tab_text_as_file_path_list.py: added respective scripts
 * changed: scripts/python/tacklebar/libs/npplib.py: code improvement
 * changed: README_EN.txt: readme update
 

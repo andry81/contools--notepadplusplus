@@ -19,5 +19,5 @@ else:
 setattr(npplib, 'notepad', notepad)
 setattr(npplib, 'editor', editor)
 
-# execute
-npplib.open_new_tab_from_current_tab_text_as_file_path_list(True, True, True, True, True, True)
+# execute, does not allow header on empty file path list, does not reactivate current tab at the last
+npplib.open_new_tab_from_all_file_tabs_text_as_file_path_list_by_reactivate_forward(True, False, True, True, True, False)

@@ -1,5 +1,8 @@
 from __future__ import print_function
 
+def get_char_nothrow(str, index):
+  return str[index] if 0 <= abs(index) < len(str) else None
+
 def toggle_readonly_flag_for_all_tabs():
   print('toggle_readonly_flag_for_all_tabs:')
 
@@ -101,18 +104,18 @@ def reopen_all_files(reactivate_reversed = True, allow_unsaved = False, allow_ed
     # loop with tabs reactivation to call functions
     for f in all_files:
       notepad.activateFile(f[0])
-      is_unsaved = editor.getModify()
+      is_modified = editor.getModify()
       can_undo = editor.canUndo()
       can_redo = editor.canRedo()
-      if (allow_unsaved or not is_unsaved) and (allow_edited or (not can_undo and not can_redo)):
+      if (allow_unsaved or not is_modified) and (allow_edited or (not can_undo and not can_redo)):
         print('  [{}] (reopened)        {}'.format(file_index, f[0]))
         notepad.close()
         notepad.open(f[0])
         num_reopened += 1
       else:
         print('  [{}] {}{}{}'.format(file_index,
-          ('[unsaved]' if is_unsaved else '         ') + ('[edited]' if can_undo or can_redo else '        '),
-          ' ' if is_unsaved or can_undo or can_redo else '', f[0])) 
+          ('[unsaved]' if is_modified else '         ') + ('[edited]' if can_undo or can_redo else '        '),
+          ' ' if is_modified or can_undo or can_redo else '', f[0])) 
         num_skipped += 1
 
       file_index += 1
@@ -162,17 +165,17 @@ def close_all_files(reactivate_reversed = True, allow_unsaved = False, allow_edi
 
   for f in all_files:
     notepad.activateFile(f[0])
-    is_unsaved = editor.getModify()
+    is_modified = editor.getModify()
     can_undo = editor.canUndo()
     can_redo = editor.canRedo()
-    if (allow_unsaved or not is_unsaved) and (allow_edited or (not can_undo and not can_redo)):
+    if (allow_unsaved or not is_modified) and (allow_edited or (not can_undo and not can_redo)):
       print('  [{}] (closed)          {}'.format(file_index, f[0]))
       notepad.close()
       num_closed += 1
     else:
       print('  [{}] {}{}{}'.format(file_index,
-        ('[unsaved]' if is_unsaved else '         ') + ('[edited]' if can_undo or can_redo else '        '),
-        ' ' if is_unsaved or can_undo or can_redo else '', f[0])) 
+        ('[unsaved]' if is_modified else '         ') + ('[edited]' if can_undo or can_redo else '        '),
+        ' ' if is_modified or can_undo or can_redo else '', f[0])) 
       num_skipped += 1
 
     file_index += 1
@@ -888,6 +891,8 @@ def process_extra_command_line():
 def open_from_file_list(file_list):
   print('open_from_file_list:')
 
+  import os
+
   num_opened = 0
 
   for file_path in file_list:
@@ -947,72 +952,215 @@ def close_all_npp_windows(not_multiinst = True, current_proc = True):
 def get_current_tab_text(use_selection = False, allow_not_selected = True):
   text = None
 
-  if use_selection:
+  if not use_selection:
+    text = editor.getText()
+  else:
     text = editor.getSelText()
 
-  if allow_not_selected and not text:
-    text = editor.getText()
+    if not text and allow_not_selected:
+      text = editor.getText()
 
   return text
 
-def search_file_paths_in_current_tab(use_selection = False, allow_not_selected = True):
+def get_file_path_regex_pattern(allow_env_var_prefix):
+  # tested: https://regex101.com/r/BrmRSP
+
+  if allow_env_var_prefix:
+    return r'(?:(?![\\/=])[a-zA-Z]:[\\/]|\\\\\?\\[a-zA-Z]:[\\/]|%[^\x00-\x1F\\/:?*<>|"\r\n]+%[\\/]|\$\{[^$%\x00-\x1F\\/:?*<>|"\r\n]+\}[\\/]|\$\([^$%\x00-\x1F\\/:?*<>|"\r\n]+\)[\\/]|\$/\{[^$%\x00-\x1F\\/:?*<>|"\r\n]+\}[\\/]|\$(?![{(\\/])[^$%\x00-\x1F\\/:?*<>|"\r\n]+[\\/])[^\x00-\x1F\\/:?*<>|"\r\n]+(?:[\\/][^\x00-\x1F\\/:?*<>|"\r\n]+)*[\\/]?(?!:[\\/])'
+
+  return r'(?:(?![\\/=])[a-zA-Z]:[\\/]|\\\\\?\\[a-zA-Z]:[\\/])[^\x00-\x1F\\/:?*<>|"\r\n]+(?:[\\/][^\x00-\x1F\\/:?*<>|"\r\n]+)*[\\/]?(?!:[\\/])'
+
+def search_file_paths_in_current_tab(use_selection = False, allow_not_selected = True, allow_env_var_prefix = True):
   text = get_current_tab_text(use_selection, allow_not_selected)
+
   if not text:
     return None
 
   import re
 
-  # tested: https://regex101.com/r/BrmRSP
-  FILE_PATH_REGEX = r'(?:(?![\\/=])[a-zA-Z]:[\\/]|\\\\\?\\[a-zA-Z]:[\\/]|(?![\\/])\.\.?[\\/])[^\x00-\x1F\\/:?*<>|"\r\n]+(?:[\\/][^\x00-\x1F\\/:?*<>|"\r\n]+)*[\\/]?(?!:[\\/])'
-
   # case sensitive because there is no need to use insensitive search (slower)
-  return re.findall(FILE_PATH_REGEX, text, re.MULTILINE)
+  return re.findall(get_file_path_regex_pattern(allow_env_var_prefix), text, re.MULTILINE)
 
-def open_new_tab_from_current_tab_text_as_file_path_list(use_selection = False, allow_not_selected = True):
+def expand_path(path):
+  import os, re
+
+  is_path_expanded = False
+  path_placeholder_prefix_match = re.match(r'%([^%\\/])+%', path)
+
+  if path_placeholder_prefix_match:
+    path = os.path.expandvars(path)
+    is_path_expanded = True
+
+  if (not path_placeholder_prefix_match) and not is_path_expanded:
+    path_placeholder_prefix_match = re.match(r'\$\{([^$%\\/]+)\}(.*)', path)
+
+    if not path_placeholder_prefix_match:
+      path_placeholder_prefix_match = re.match(r'\$\(([^$%\\/]+)\)(.*)', path)
+
+    if not path_placeholder_prefix_match:
+      path_placeholder_prefix_match = re.match(r'\$/\{([^$%\\/]+)\}(.*)', path)
+
+    if not path_placeholder_prefix_match:
+      path_placeholder_prefix_match = re.match(r'\$([^$%\\/]+)(.*)', path)
+
+    if path_placeholder_prefix_match:
+      path_placeholder_var_name = path_placeholder_prefix_match.group(1)
+
+      if len(path_placeholder_var_name) > 0 and path_placeholder_var_name in os.environ:
+        path_placeholder_var_value = os.environ.get(path_placeholder_var_name)
+
+        if len(path_placeholder_var_value) > 0:
+          path = path_placeholder_var_value + path_placeholder_prefix_match.group(2)
+          is_path_expanded = True
+
+  return path
+
+def open_new_tab_from_current_tab_text_as_file_path_list(
+    insert_tab_file_path_as_header_comment = True, use_selection = False, allow_not_selected = True, allow_env_var_prefix = True,
+    allow_expand_env_vars = True, add_file_url_prefix = True):
   print('open_new_tab_from_current_tab_text_as_file_path_list:')
 
-  path_list = search_file_paths_in_current_tab(use_selection, allow_not_selected)
+  path_list = search_file_paths_in_current_tab(use_selection, allow_not_selected, allow_env_var_prefix)
+
   if not path_list:
     return None
 
-  lr = "\n"
-  match editor.getEOLMode():
+  active_file = notepad.getCurrentFilename()
+
+  current_lr = "\n"
+  match editor.getEOLMode(): # get current tab line return mode
     case 0:
-      lr = "\r\n"
+      current_lr = "\r\n"
     case 1:
-      lr = "\n"
+      current_lr = "\n"
     case 2:
-      lr = "\r"
+      current_lr = "\r"
 
   notepad.new()
 
+  if insert_tab_file_path_as_header_comment:
+    editor.appendText('# ' + active_file + current_lr)
+
   for path in path_list:
     path = path.strip()
-    if path:
-      editor.appendText(path + lr)
 
-def open_new_instance_from_current_tab_text_as_file_path_list(use_selection = False, allow_not_selected = True):
+    if path:
+      if allow_expand_env_vars:
+        path = expand_path(path)
+
+      if add_file_url_prefix:
+        path = r'file://' + path
+
+      editor.appendText(path + current_lr)
+
+def open_new_tab_from_all_file_tabs_text_as_file_path_list_by_reactivate_forward(
+    insert_tab_file_path_as_header_comment = True, allow_header_for_empty_path_list = False, allow_env_var_prefix = True,
+    allow_expand_env_vars = True, add_file_url_prefix = True, reactive_current_at_last = False):
+  print('open_new_tab_from_all_file_tabs_text_as_file_path_list_by_reactivate_forward:')
+
+  import os, re
+
+  all_files = notepad.getFiles() # list of tuples
+  active_file = notepad.getCurrentFilename()
+
+  current_lr = "\n"
+  match editor.getEOLMode(): # get current tab line return mode
+    case 0:
+      current_lr = "\r\n"
+    case 1:
+      current_lr = "\n"
+    case 2:
+      current_lr = "\r"
+
+  text = ''
+  prev_path_list_text = None
+  last_path_list_text = None
+
+  for f in all_files:
+    file_path = f[0]
+
+    if os.path.isabs(file_path): # if an absolute path, then a tab is a file opened or a new tab which is saved to a file
+      notepad.activateFile(file_path)
+
+      lr = "\n"
+      match editor.getEOLMode():
+        case 0:
+          lr = "\r\n"
+        case 1:
+          lr = "\n"
+        case 2:
+          lr = "\r"
+
+      tab_text = get_current_tab_text()
+
+      if last_path_list_text:
+        prev_path_list_text = last_path_list_text
+
+      last_path_list_text = None
+
+      if tab_text:
+        # case sensitive because there is no need to use insensitive search (slower)
+        path_list = re.findall(get_file_path_regex_pattern(allow_env_var_prefix), tab_text, re.MULTILINE)
+
+        for path in path_list:
+          path = path.strip()
+
+          if path:
+            if allow_expand_env_vars:
+              path = expand_path(path)
+
+            if add_file_url_prefix:
+              path = r'file://' + path
+
+            last_path_list_text = path
+
+            # end by the tab line return if not ended
+            if not get_char_nothrow(tab_text, -len(lr)) == lr:
+              last_path_list_text += lr
+
+      if last_path_list_text:
+        if prev_path_list_text:
+          text += current_lr # end previous not empty path list text by current tab line return
+
+        if insert_tab_file_path_as_header_comment and (allow_header_for_empty_path_list or last_path_list_text):
+          text += '# ' + file_path + current_lr
+
+        text += last_path_list_text
+
+  notepad.new()
+
+  editor.appendText(text)
+
+  if reactive_current_at_last:
+    notepad.activateFile(active_file)
+
+def open_new_instance_from_current_tab_text_as_file_path_list(use_selection = False, allow_not_selected = True, allow_env_var_prefix = True, allow_expand_env_vars = False):
   print('open_new_instance_from_current_tab_text_as_file_path_list:')
 
-  path_list = search_file_paths_in_current_tab(use_selection, allow_not_selected)
+  path_list = search_file_paths_in_current_tab(use_selection, allow_not_selected, allow_env_var_prefix)
+
   if not path_list:
     return None
 
-  lr = "\n"
-  match editor.getEOLMode():
+  current_lr = "\n"
+  match editor.getEOLMode(): # get current tab line return mode
     case 0:
-      lr = "\r\n"
+      current_lr = "\r\n"
     case 1:
-      lr = "\n"
+      current_lr = "\n"
     case 2:
-      lr = "\r"
+      current_lr = "\r"
 
   import sys, tempfile
   import subprocess
 
-  with tempfile.NamedTemporaryFile(mode='w+t', newline=lr, encoding='utf-8', delete=False) as tmp_file:
+  with tempfile.NamedTemporaryFile(mode='w+t', newline=current_lr, encoding='utf-8', delete=False) as tmp_file:
     for path in path_list:
       path = path.strip()
+
+      if allow_expand_env_vars:
+        path = expand_path(path)
+
       if path:
         tmp_file.write(path + "\n")
 

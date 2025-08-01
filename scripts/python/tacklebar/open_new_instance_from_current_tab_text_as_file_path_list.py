@@ -20,4 +20,4 @@ setattr(npplib, 'notepad', notepad)
 setattr(npplib, 'editor', editor)
 
 # execute
-npplib.open_new_instance_from_current_tab_text_as_file_path_list(True, True)
+npplib.open_new_instance_from_current_tab_text_as_file_path_list(True, True, True, True)
