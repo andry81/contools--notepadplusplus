@@ -1,1 +1,4 @@
-scripts/python/**/__pycache__
+/**/.log
+/**/.temp
+/**/_out
+/**/__pycache__
