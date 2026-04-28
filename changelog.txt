@@ -1,3 +1,6 @@
+2026.04.27:
+* changed: README_EN.txt: minor change
+
 2025.08.01:
 * fixed: scripts/python/tacklebar/libs/npplib.py: execution fixup
 * fixed: scripts/python/tacklebar/libs/npplib.py: `get_current_tab_text` function fixup

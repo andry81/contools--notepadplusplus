@@ -1,5 +1,5 @@
 * README_EN.txt
-* 2025.08.01
+* 2026.04.27
 * contools--notepadplusplus
 
 1. DESCRIPTION
@@ -154,7 +154,7 @@ Additional command line arguments:
 
 `-z --remove_file_list_after_open`
 
-  Remove the file list after all paths from it is opened.
+  Remove the file list after all paths in it is opened.
 
 `-z --open_short_path_if_gt_limit -z 258`
 
