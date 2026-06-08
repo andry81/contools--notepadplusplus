@@ -146,15 +146,16 @@ def reopen_all_files(reactivate_reversed = True, allow_unsaved = False, allow_ed
 def reopen_all_not_altered_files(reactivate_reversed = True):
   return reopen_all_files(reactivate_reversed, False, False)
 
-# can be edited
+# can be edited, but not modified (has no unsaved changes)
 def reopen_all_saved_files(reactivate_reversed = True):
   return reopen_all_files(reactivate_reversed, False, True)
 
-def close_all_files(reactivate_reversed = True, allow_unsaved = False, allow_edited = False):
+def close_all_files(reactivate_reversed = True, allow_unsaved = False, allow_edited = False, only_edited = False):
   print('close_all_files:')
   print('  - reactivate_reversed: ' + str(reactivate_reversed))
   print('  - allow_unsaved:       ' + str(allow_unsaved))
   print('  - allow_edited:        ' + str(allow_edited))
+  print('  - only_edited:         ' + str(only_edited))
 
   all_files = list(notepad.getFiles())
   active_file = notepad.getCurrentFilename()
@@ -169,9 +170,10 @@ def close_all_files(reactivate_reversed = True, allow_unsaved = False, allow_edi
     can_undo = editor.canUndo()
     can_redo = editor.canRedo()
     if (allow_unsaved or not is_modified) and (allow_edited or (not can_undo and not can_redo)):
-      print('  [{}] (closed)          {}'.format(file_index, f[0]))
-      notepad.close()
-      num_closed += 1
+      if (not only_edited or (allow_edited and (can_undo or can_redo))):
+        print('  [{}] (closed)          {}'.format(file_index, f[0]))
+        notepad.close()
+        num_closed += 1
     else:
       print('  [{}] {}{}{}'.format(file_index,
         ('[unsaved]' if is_modified else '         ') + ('[edited]' if can_undo or can_redo else '        '),
@@ -197,13 +199,17 @@ def close_all_files(reactivate_reversed = True, allow_unsaved = False, allow_edi
   print('* Number of skipped paths: ' + str(num_skipped))
   print()
 
-# not altered - not modified (but may be saved) and not edited
+# not altered - not modified (but may be saved) and not been edited
 def close_all_not_altered_files(reactivate_reversed = True):
-  return close_all_files(reactivate_reversed, False, False)
+  return close_all_files(reactivate_reversed, False, False, False)
 
-# files can be edited
+# can be edited, but not modified (has no unsaved changes)
 def close_all_saved_files(reactivate_reversed = True):
-  return close_all_files(reactivate_reversed, False, True)
+  return close_all_files(reactivate_reversed, False, True, False)
+
+# must be edited AND not modified (has no unsaved changes)
+def close_altered_saved_files(reactivate_reversed = True):
+  return close_all_files(reactivate_reversed, False, True, True)
 
 def undo_all_files(reversed_order = True):
   print('undo_all_files:')

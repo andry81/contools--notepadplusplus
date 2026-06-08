@@ -1,5 +1,5 @@
 * README_EN.txt
-* 2026.04.27
+* 2026.06.08
 * contools--notepadplusplus
 
 1. DESCRIPTION
@@ -93,8 +93,9 @@ Now each time when the Notepad++ starts it will call to `startup.py` script.
 
 * `/scripts/python/tacklebar/close_all_saved_files_*.py`
   `/scripts/python/tacklebar/close_all_not_altered_files_*.py`
+  `/scripts/python/tacklebar/close_altered_saved_files_*.py`
 
-  Scripts to safely close all saved or not altered files.
+  Scripts to safely close all saved or not altered or altered AND saved files.
 
 * `/scripts/python/tacklebar/reactivate_all_files_*.py`
 

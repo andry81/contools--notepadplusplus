@@ -1,3 +1,7 @@
+2026.06.08:
+* new: scripts/python/tacklebar: libs/npplib.py, close_altered_saved_files_activate_forward.py: `close_altered_saved_files` function and related script
+* changed: README_EN.txt: readme update
+
 2026.04.27:
 * changed: README_EN.txt: minor change
 
