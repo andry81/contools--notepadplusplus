@@ -1,4 +1,7 @@
 2026.06.13:
+* changed: README_EN.txt: readme update
+
+2026.06.13:
 * fixed: scripts/python/tacklebar: libs/npplib.py, toggle_readonly_flag_for_all_tabs.py, clear_readonly_flag_for_all_tabs.py: respective functions with tabs order reactivation
 * fixed: scripts/python/tacklebar: libs/npplib.py, clear_readonly_flag_for_all_tabs.py: `clear_readonly_flag_for_all_tabs` correctly clears the both attributes altogether (a tab and a file)
 * new: scripts/python/tacklebar: libs/npplib.py, set_readonly_flag_for_all_tab_files.py, clear_readonly_flag_for_all_tab_files.py: respective functions with both attributes (a tab and a file) set and clear

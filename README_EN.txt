@@ -1,5 +1,5 @@
 * README_EN.txt
-* 2026.06.08
+* 2026.06.13
 * contools--notepadplusplus
 
 1. DESCRIPTION
@@ -103,12 +103,15 @@ Now each time when the Notepad++ starts it will call to `startup.py` script.
 
 * `/scripts/python/tacklebar/toggle_readonly_flag_for_all_tabs.py`
 
-  Script to toggle the inner Read-Only flag for all tabs (in the Notepad++).
+  Script to toggle the inner (tab) Read-Only flag for all opened files.
+  Script does not clear a file Read-Only attribute.
 
-* `/scripts/python/tacklebar/clear_readonly_flag_from_all_files.py`
+* `/scripts/python/tacklebar/set_readonly_flag_from_all_tab_files.py`
+  `/scripts/python/tacklebar/clear_readonly_flag_from_all_tab_files.py`
 
-  Script to clear the Read-Only flag from all opened tab files in the file
-  system.
+  Script to set and clear the both the inner (tab) and the outer (file)
+  Read-Only flag from all opened files.
+  Both scripts synchronizes the inner and the outer flags.
 
 * `/scripts/python/tacklebar/undo_all_files.py`
   `/scripts/python/tacklebar/redo_all_files.py`
