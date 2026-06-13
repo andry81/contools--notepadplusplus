@@ -3,48 +3,144 @@ from __future__ import print_function
 def get_char_nothrow(str, index):
   return str[index] if 0 <= abs(index) < len(str) else None
 
-def toggle_readonly_flag_for_all_tabs():
+# NOTE:
+#   DOES NOT toggle a file attribute
+def toggle_readonly_flag_for_all_tabs(reactivate_reversed = True):
   print('toggle_readonly_flag_for_all_tabs:')
+  print('  - reactivate_reversed: ' + str(reactivate_reversed))
 
   all_files = notepad.getFiles()
   active_file = notepad.getCurrentFilename()
 
   num_toggled = 0
-  file_index = len(all_files)
 
-  for f in reversed(all_files):
-    file_index -= 1
-    print('  [{}] {}'.format(file_index, f))
-    notepad.activateFile(f[0])
-    notepad.menuCommand(MENUCOMMAND.EDIT_SETREADONLY)
-    num_toggled += 1
+  if reactivate_reversed:
+    file_index = len(all_files)
+
+    for f in reversed(all_files):
+      file_index -= 1
+      print('  [{}] {}'.format(file_index, f))
+      notepad.activateFile(f[0])
+      notepad.menuCommand(MENUCOMMAND.EDIT_SETREADONLY) # CAUTION: works as a tab toggle, DOES NOT toggle a file attribute
+      num_toggled += 1
+  else:
+    file_index = 0
+
+    for f in all_files:
+      file_index += 1
+      print('  [{}] {}'.format(file_index, f))
+      notepad.activateFile(f[0])
+      notepad.menuCommand(MENUCOMMAND.EDIT_SETREADONLY) # CAUTION: works as a tab toggle, DOES NOT toggle a file attribute
+      num_toggled += 1
 
   notepad.activateFile(active_file)
 
   print()
-  print('* Number of toggled paths: '+ str(num_toggled))
+  print('* Number of toggled tabs: '+ str(num_toggled))
   print()
 
-def clear_readonly_flag_from_all_files():
+# NOTE:
+#   Does clear the read only state of a tab and make sure the file attribute is synchronized with it.
+#   Tested on Notepad++ x64 v8.9.6.4, PythonScript v3.0.20.0
+def clear_readonly_flag_from_all_tab_files(reactivate_reversed = True):
   print('clear_readonly_flag_from_all_files:')
+  print('  - reactivate_reversed: ' + str(reactivate_reversed))
+
+  import os, stat
 
   all_files = notepad.getFiles()
   active_file = notepad.getCurrentFilename()
 
   num_cleared = 0
-  file_index = len(all_files)
 
-  for f in reversed(all_files):
-    file_index -= 1
-    print('  [{}] {}'.format(file_index, f))
-    notepad.activateFile(f[0])
-    notepad.menuCommand(MENUCOMMAND.EDIT_CLEARREADONLY)
-    num_cleared += 1
+  if reactivate_reversed:
+    file_index = len(all_files)
+
+    for f in reversed(all_files):
+      file_index -= 1
+      print('  [{}] {}'.format(file_index, f))
+      notepad.activateFile(f[0])
+      # CAUTION: disables `MENUCOMMAND.EDIT_SETREADONLY` menu item for the toggle if a file has the read only attribute
+      if os.stat(f[0]).st_file_attributes & stat.FILE_ATTRIBUTE_READONLY:
+        notepad.menuCommand(MENUCOMMAND.EDIT_CLEARREADONLY) # CAUTION: works as a file toggle, DOES toggle a file attribute
+      if editor.getReadOnly(): # CAUTION: additionally reads a file read only attribute
+        notepad.menuCommand(MENUCOMMAND.EDIT_SETREADONLY)   # CAUTION: works as a tab toggle, DOES NOT toggle a file attribute
+      num_cleared += 1
+  else:
+    file_index = 0
+
+    for f in all_files:
+      file_index += 1
+      print('  [{}] {}'.format(file_index, f))
+      notepad.activateFile(f[0])
+      # CAUTION: disables `MENUCOMMAND.EDIT_SETREADONLY` menu item for the toggle if a file has the read only attribute
+      if os.stat(f[0]).st_file_attributes & stat.FILE_ATTRIBUTE_READONLY:
+        notepad.menuCommand(MENUCOMMAND.EDIT_CLEARREADONLY) # CAUTION: works as a file toggle, DOES toggle a file attribute
+      if editor.getReadOnly(): # CAUTION: additionally reads a file read only attribute
+        notepad.menuCommand(MENUCOMMAND.EDIT_SETREADONLY)   # CAUTION: works as a tab toggle, DOES NOT toggle a file attribute
+      num_cleared += 1
 
   notepad.activateFile(active_file)
 
   print()
-  print('* Number of cleared paths: ' + str(num_cleared))
+  print('* Number of cleared tabs: ' + str(num_cleared))
+  print()
+
+# NOTE:
+#   Does set the read only state of a tab and make sure the file attribute is synchronized with it.
+#   Tested on Notepad++ x64 v8.9.6.4, PythonScript v3.0.20.0
+def set_readonly_flag_from_all_tab_files(reactivate_reversed = True):
+  print('set_readonly_flag_from_all_tab_files:')
+  print('  - reactivate_reversed: ' + str(reactivate_reversed))
+
+  import os, stat
+
+  all_files = notepad.getFiles()
+  active_file = notepad.getCurrentFilename()
+
+  num_set = 0
+
+  if reactivate_reversed:
+    file_index = len(all_files)
+
+    for f in reversed(all_files):
+      file_index -= 1
+      print('  [{}] {}'.format(file_index, f))
+      notepad.activateFile(f[0])
+      has_file_readonly_attr = os.stat(f[0]).st_file_attributes & stat.FILE_ATTRIBUTE_READONLY
+      # CAUTION: disables `MENUCOMMAND.EDIT_SETREADONLY` menu item for the toggle if a file has the read only attribute
+      if has_file_readonly_attr:
+        notepad.menuCommand(MENUCOMMAND.EDIT_CLEARREADONLY) # CAUTION: works as a file toggle, DOES toggle a file attribute
+      if not editor.getReadOnly(): # CAUTION: additionally reads a file read only attribute
+        notepad.menuCommand(MENUCOMMAND.EDIT_SETREADONLY)   # CAUTION: works as a tab toggle, DOES NOT toggle a file attribute
+      if has_file_readonly_attr:
+        notepad.menuCommand(MENUCOMMAND.EDIT_CLEARREADONLY) # CAUTION: works as a file toggle, DOES toggle a file attribute
+      else:
+        notepad.menuCommand(MENUCOMMAND.EDIT_CLEARREADONLY) # CAUTION: works as a file toggle, DOES toggle a file attribute
+      num_set += 1
+  else:
+    file_index = 0
+
+    for f in all_files:
+      file_index += 1
+      print('  [{}] {}'.format(file_index, f))
+      notepad.activateFile(f[0])
+      has_file_readonly_attr = os.stat(f[0]).st_file_attributes & stat.FILE_ATTRIBUTE_READONLY
+      # CAUTION: disables `MENUCOMMAND.EDIT_SETREADONLY` menu item for the toggle if a file has the read only attribute
+      if has_file_readonly_attr:
+        notepad.menuCommand(MENUCOMMAND.EDIT_CLEARREADONLY) # CAUTION: works as a file toggle, DOES toggle a file attribute
+      if not editor.getReadOnly(): # CAUTION: additionally reads a file read only attribute
+        notepad.menuCommand(MENUCOMMAND.EDIT_SETREADONLY)   # CAUTION: works as a tab toggle, DOES NOT toggle a file attribute
+      if has_file_readonly_attr:
+        notepad.menuCommand(MENUCOMMAND.EDIT_CLEARREADONLY) # CAUTION: works as a file toggle, DOES toggle a file attribute
+      else:
+        notepad.menuCommand(MENUCOMMAND.EDIT_CLEARREADONLY) # CAUTION: works as a file toggle, DOES toggle a file attribute
+      num_set += 1
+
+  notepad.activateFile(active_file)
+
+  print()
+  print('* Number of set tabs and files: ' + str(num_set))
   print()
 
 def reactivate_all_files(reactivate_reversed = True, reactive_current_at_last = False):
@@ -73,7 +169,7 @@ def reactivate_all_files(reactivate_reversed = True, reactive_current_at_last = 
   print()
 
 # NOTE:
-#   `reactivate_reversed = False` - DOES NOT change activation order
+#   `reactivate_reversed = False` - forward activation order
 #   `allow_unsaved = True` - where has an unsaved modification
 #   `allow_edited = True` - where an undo or redo list is not empty
 #

@@ -17,7 +17,8 @@ else:
 
 # inject globals
 setattr(npplib, 'notepad', notepad)
+setattr(npplib, 'editor', editor)
 setattr(npplib, 'MENUCOMMAND', MENUCOMMAND)
 
 # execute
-npplib.toggle_readonly_flag_for_all_tabs(False)
+npplib.clear_readonly_flag_from_all_tab_files(False)
