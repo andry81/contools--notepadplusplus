@@ -1,3 +1,8 @@
+2026.11.02:
+* fixed: scripts/python/tacklebar/libs/npplib.py: prevent regexp in `get_file_path_regex_pattern` function to match paths beginning by strings like `$'\r...`
+* new: tests/README_EN.txt: readme file for tests
+* new: tests/_testdata: test data for the code from `npplib.py`
+
 2026.06.13:
 * changed: README_EN.txt: readme update
 
