@@ -1,3 +1,8 @@
+2026.11.14:
+* new: deploy/plugins/MultiReplace/lists/contools/find-tail-white-rem-lines-with-tail-white-lines-without-last-lr.mrl: regexp to find tail `rem` lines in batch files (`.bat`, `.cmd`)
+* new: tests/_testdata/deploy/plugins/MultiReplace/lists/contools/find-tail-white-rem-lines-with-tail-white-lines-without-last-lr.mrl: test data for the regexp from `find-tail-white-rem-lines-with-tail-white-lines-without-last-lr.mrl`
+* changed: tests/README_EN.txt: readme update
+
 2026.11.06:
 * changed: scripts/python/tacklebar/libs/npplib.py: minor refactor
 
