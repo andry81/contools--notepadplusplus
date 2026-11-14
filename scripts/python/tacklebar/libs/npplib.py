@@ -262,8 +262,8 @@ def close_all_files(reactivate_reversed = True, allow_unsaved = False, allow_edi
 
   for f in all_files:
     notepad.activateFile(f[0])
-    is_modified = editor.getModify()
-    can_undo = editor.canUndo()
+    is_modified = editor.getModify() # has unsaved changes
+    can_undo = editor.canUndo()      # has history, then is edited
     can_redo = editor.canRedo()
     if (allow_unsaved or not is_modified) and (allow_edited or (not can_undo and not can_redo)):
       if (not only_edited or (allow_edited and (can_undo or can_redo))):
