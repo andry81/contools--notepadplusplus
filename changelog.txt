@@ -1,3 +1,6 @@
+2026.11.18:
+* new: deploy/plugins/MultiReplace/lists/tacklebar/copy-shortcut-target-by-list.replace-DESTDIR-by-CD.mrl: regexp to find and replace shortcut destination directory by a current directory (a dot)
+
 2026.11.14:
 * refactor: tests/_testdata: test data files refactor
 

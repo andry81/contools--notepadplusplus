@@ -1,0 +1,18 @@
+﻿[MultiReplace-Settings]
+FormatVersion=1
+SearchMode=2
+WholeWord=0
+MatchCase=0
+FormulaSupport=0
+WrapAround=0
+ReplaceAtMatches=0
+ReplaceAtMatchesEdit="1"
+OnePass=0
+Scope=0
+CSVCols="1-50"
+CSVDelim=","
+CSVQuote=""""
+Engine="Lua"
+[End]
+Selected,Find,Replace,WholeWord,MatchCase,FormulaSupport,Extended,Regex,Comments,LastModified
+1,"^[^\\r\\n\\|]+\\|",".\\|",0,0,0,0,1,"","2026-11-18 04:21:44"
